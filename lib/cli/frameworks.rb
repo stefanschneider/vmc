@@ -17,6 +17,7 @@ module VMC::Cli
       'Erlang/OTP Rebar' => ['otp_rebar',  { :mem => '64M',  :description => 'Erlang/OTP Rebar Application'}],
       'WSGI'     => ['wsgi',    { :mem => '64M',  :description => 'Python WSGI Application'}],
       'Django'   => ['django',  { :mem => '128M', :description => 'Python Django Application'}],
+      'Net'   => ['net',  { :mem => '128M', :description => '.Net Web Application'}],
     }
 
     class << self
@@ -98,6 +99,10 @@ module VMC::Cli
           # Python
           elsif !Dir.glob('wsgi.py').empty?
             return Framework.lookup('WSGI')
+
+          # Net
+          elsif !Dir.glob('web.config').empty?
+            return Framework.lookup('Net')
 
           end
         end
