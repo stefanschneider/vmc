@@ -102,7 +102,7 @@ module VMC::Cli
 
           # Net
           elsif !Dir.glob('web.config').empty?
-            return Framework.lookup('Net')
+            return Framework.lookup('dotNet')
 
           end
         end
