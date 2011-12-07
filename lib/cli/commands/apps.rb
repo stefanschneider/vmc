@@ -185,7 +185,7 @@ module VMC::Cli::Command
       uris << url
       app[:uris] = uris
       client.update_app(appname, app)
-      display "Succesfully mapped url".green
+      display "Successfully mapped url".green
     end
 
     def unmap(appname, url)
@@ -196,7 +196,7 @@ module VMC::Cli::Command
       err "Invalid url" unless deleted
       app[:uris] = uris
       client.update_app(appname, app)
-      display "Succesfully unmapped url".green
+      display "Successfully unmapped url".green
 
     end
 
@@ -268,6 +268,8 @@ module VMC::Cli::Command
     end
 
     def logs(appname)
+      # Check if we have an app before progressing further
+      client.app_info(appname)
       return grab_all_logs(appname) if @options[:all] && !@options[:instance]
       instance = @options[:instance] || '0'
       grab_logs(appname, instance)
@@ -388,7 +390,6 @@ module VMC::Cli::Command
 
       # check if we have hit our app limit
       check_app_limit
-
       # check memsize here for capacity
       if memswitch && !no_start
         check_has_capacity_for(mem_choice_to_quota(memswitch) * instances)
@@ -572,6 +573,17 @@ module VMC::Cli::Command
       err "Can't deploy applications from staging directory: [#{Dir.tmpdir}]"
     end
 
+    def check_unreachable_links
+      path = Dir.pwd
+      files = Dir.glob("#{path}/**/*", File::FNM_DOTMATCH)
+      unreachable_paths = files.select { |f|
+        File.symlink? f and !File.expand_path(File.readlink(f)).include? path
+      } if files
+      if unreachable_paths.length > 0
+        err "Can't deploy application containing links '#{unreachable_paths}' that reach outside its root '#{path}'"
+      end
+    end
+
     def upload_app_bits(appname, path)
       display 'Uploading Application:'
 
@@ -586,6 +598,7 @@ module VMC::Cli::Command
         if war_file = Dir.glob('*.war').first
           VMC::Cli::ZipUtil.unpack(war_file, explode_dir)
         else
+          check_unreachable_links
           FileUtils.mkdir(explode_dir)
           files = Dir.glob('{*,.[^\.]*}')
           # Do not process .git files
@@ -675,7 +688,7 @@ module VMC::Cli::Command
 
       display "The following provisioned services are available"
       name = ask(
-        "Please select one you which to prevision",
+        "Please select one you wish to use",
         { :indexed => true,
           :choices => user_services.collect { |s| s[:name] }
         }
