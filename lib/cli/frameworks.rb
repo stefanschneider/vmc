@@ -100,7 +100,7 @@ module VMC::Cli
           elsif !Dir.glob('wsgi.py').empty?
             return Framework.lookup('WSGI')
 
-          # Net
+          # .Net
           elsif !Dir.glob('web.config').empty?
             return Framework.lookup('dotNet')
 
