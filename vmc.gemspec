@@ -4,13 +4,13 @@ $:.unshift File.expand_path("../lib", __FILE__)
 require 'cli/version'
 
 spec = Gem::Specification.new do |s|
-  s.name = "vmc"
+  s.name = "vmc-uhuru"
   s.version = VMC::Cli::VERSION
-  s.author = "VMware"
-  s.email = "support@vmware.com"
-  s.homepage = "http://vmware.com"
-  s.description = s.summary = "Client library and CLI that provides access to the VMware Cloud Application Platform."
-  s.executables = %w(vmc)
+  s.author = "VMware; Uhurusoftware"
+  s.email = "uhuru@uhurusoftware.com"
+  s.homepage = "http://www.uhurusoftware.com"
+  s.description = s.summary = "Client library and CLI that provides access to the VMware Cloud Application Platform + support for .Net Framework."
+  s.executables = %w(vmcu)
 
   s.platform = Gem::Platform::RUBY
   s.extra_rdoc_files = ["README.md", "LICENSE"]
